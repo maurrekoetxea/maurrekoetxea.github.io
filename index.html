@@ -114,6 +114,9 @@
   .lista-pub{list-style:none;margin:0;padding:0}
   .lista-pub li{padding:16px 0;border-bottom:1px solid var(--linea);padding-left:1.6em;text-indent:-1.6em}
   .lista-pub li:last-child{border-bottom:none}
+  main > section[hidden]{display:none !important}
+  nav a.activo{color:#fff;border-bottom:2px solid #8fb0de;padding-bottom:3px}
+  main > section{border-bottom:none}
   .lista-pub[hidden]{display:none}
   .medios li{text-indent:0;padding-left:0}
   .medios .tipo{display:inline-block;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:var(--azul-claro);color:var(--azul);padding:2px 9px;border-radius:12px;margin-right:8px;vertical-align:1px}
@@ -189,11 +192,11 @@
 
 <header>
   <div class="barra">
-    <a class="logo" href="#inicio">Maite Aurrekoetxea-Casaus</a>
+    <a class="logo" href="#investigacion">Maite Aurrekoetxea-Casaus</a>
     <nav aria-label="Principal">
       <ul>
-        <li><a href="#sobre-mi">Sobre mí</a></li>
         <li><a href="#investigacion">Investigación</a></li>
+        <li><a href="#sobre-mi">Sobre mí</a></li>
         <li><a href="#publicaciones">Publicaciones</a></li>
         <li><a href="#docencia">Docencia</a></li>
         <li><a href="#trayectoria">Trayectoria</a></li>
@@ -748,7 +751,7 @@
 <footer>
   <div class="barra">
     <span>© 2026 Maite Aurrekoetxea-Casaus · Universidad de Deusto</span>
-    <a class="arriba" href="#inicio">Volver arriba ↑</a>
+    <a class="arriba" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Volver arriba ↑</a>
   </div>
 </footer>
 
@@ -760,6 +763,28 @@
       document.querySelectorAll('.lista-pub').forEach(function(l){l.hidden = (l.id !== b.dataset.lista)});
     });
   });
+</script>
+<script>
+(function(){
+  var rutas={'sobre-mi':['sobre-mi'],'investigacion':['investigacion','grupo'],'grupo':['investigacion','grupo'],
+    'publicaciones':['publicaciones'],'docencia':['docencia'],'trabajos':['docencia'],
+    'trayectoria':['trayectoria'],'contacto':['contacto']};
+  var secciones=[].slice.call(document.querySelectorAll('main > section'));
+  var enlaces=[].slice.call(document.querySelectorAll('nav a'));
+  function mostrar(){
+    var h=(location.hash||'').replace('#','');
+    var ruta=rutas[h]?h:'investigacion';
+    var ver=rutas[ruta];
+    secciones.forEach(function(sec){ sec.hidden = ver.indexOf(sec.id)===-1; });
+    var principal = (ruta==='grupo')?'investigacion':(ruta==='trabajos'?'docencia':ruta);
+    enlaces.forEach(function(a){ a.classList.toggle('activo', a.getAttribute('href')==='#'+principal); });
+    if(ruta==='trabajos'){ var t=document.getElementById('trabajos'); if(t){ t.scrollIntoView(); } }
+    else { window.scrollTo(0,0); }
+    try{ if(window.goatcounter && window.goatcounter.count && h){ window.goatcounter.count({path:'/'+ruta, title:document.title}); } }catch(e){}
+  }
+  window.addEventListener('hashchange',mostrar);
+  mostrar();
+})();
 </script>
 <script data-goatcounter="https://maurreko.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
